@@ -2,56 +2,56 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class App extends React.Component {
-
 	constructor() {
-		super(); // going to give us the context of the parent
-		this.state = {
-			a: ' '
-		}
+		super();
+		this.state = {val: 0}
+		this.update = this.update.bind(this)
+	}	
 
-	}
-
-
-	update () { // custom method
-		this.setState({
-			// gets the value for the specific node 'a'
-		a: this.a.refs.input.value,
-
-		// gets the value for the specific node 'b'
-		b: this.refs.b.value
+	update() {
+		this.setState( {
+			val: this.state.val + 1
 		})
-		
 	}
 
+	// Access to state and props
+	componentWillMount() {
+		console.log('componentWillMount');
+		this.setState({m: 2})
+	}
 
-  render() {
-    return (
-    	<div>	
-    		<Input 
-    		ref={component => this.a = component}
-    		update={this.update.bind(this)}
-    		/>
-    		{this.state.a}
+	componentDidMount() {
+		console.log('componentDidMount');
+		this.inc = setInterval(this.update,500);
+	}
 
-    		<hr />
-    		<input
-    		ref="b"
-    		type="text"
-    		onChange={this.update.bind(this)}
-    		/>
-    		{this.state.b}
-    	</div>
-    )
-  }
-}
-
-
-class Input extends React.Component {
 	render() {
-		//Wrapping in a div now references the FindDOMNode call
-		return <div><input  ref="input" type="text" onChange={this.props.update}/></div>
+		console.log('render');
+		return <button onClick={this.update}>{this.state.val * this.state.m}</button>
+	}
+
+	componentWillUnmount() {
+		console.log('componentWillUnmount');
+		clearInterval(this.inc)
 	}
 }
 
+class Wrapper extends React.Component {
+	mount() {
+		ReactDOM.render(<App />, document.getElementById('a'))
+	}
+	unmount() {
+		ReactDOM.unmountComponentAtNode(document.getElementById('a'))
+	}
+	render() {
+		return (
+			<div>
+			<button onClick={this.mount.bind(this)}>Mount</button>
+			<button onClick={this.unmount.bind(this)}>UnMount</button>
+			<div id="a"></div>
+			</div>
+		)
+	}
+}
 
-export default App 
+export default Wrapper 
