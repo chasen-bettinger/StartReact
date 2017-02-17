@@ -1,21 +1,44 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-class App extends Component {
+class App extends React.Component {
+
+	constructor() {
+		super(); // going to give us the context of the parent
+		this.state = {
+			txt: 'this is the state txt'
+		}
+
+	}
+
+
+	update (e) { // custom method
+		this.setState({txt: e.target.value})
+	}
+
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    	<div>	
+    		<h1>{this.state.txt}</h1>
+    		<Widget update={this.update.bind(this)} />
+    	</div>
+    )
   }
 }
 
-export default App;
+// Stateless widget
+const Widget = (props) =>
+<input type="text" onChange={props.update}/>
+// Creating new keys
+App.propTypes = {
+	txt: React.PropTypes.string,
+	cat: React.PropTypes.number.isRequired
+}
+
+// Creating default keys
+App.defaultProps = {
+	txt: "this is the default txt"
+}
+
+//const App = () => <h1>Hello stateless</h1>
+export default App 
